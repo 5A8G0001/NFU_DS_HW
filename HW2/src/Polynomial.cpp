@@ -74,27 +74,27 @@ public:
     Polynomial Add(Polynomial poly){ // add two polynomials
 
         Polynomial sum;
-        int aPos = 0, bPos = 0;
-        while((aPos < terms) && (bPos < poly.terms)){
-            if(termArray[aPos].exp == poly.termArray[bPos].exp){
-                float t = termArray[aPos].coef + poly.termArray[bPos].coef;
-                if(t) sum.NewTerm(t,termArray[aPos].exp);
+        int aPos = 0, bPos = 0; // position of the terms in the two polynomials
+        while((aPos < terms) && (bPos < poly.terms)){ 
+            if(termArray[aPos].exp == poly.termArray[bPos].exp){ // 如果兩個項的指數相同
+                float t = termArray[aPos].coef + poly.termArray[bPos].coef; 
+                if(t) sum.NewTerm(t,termArray[aPos].exp); // 如果t不為0,則加入到sum中
                 aPos++; bPos++;
             }
-            else if(termArray[aPos].exp < poly.termArray[bPos].exp){
-                sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp);
+            else if(termArray[aPos].exp < poly.termArray[bPos].exp){ // 如果第一個項的指數小於第二個項的指數
+                sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp); // 將第二個項加入到sum中
                 bPos++;
             }
             else{
-                sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp);
+                sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp); // 將第一個項加入到sum中
                 aPos++;
             }
         }
 
-        for(;aPos < terms;aPos++){
+        for(;aPos < terms;aPos++){ // add the remaining terms
             sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp);
         }
-        for(;bPos < poly.terms;bPos++){
+        for(;bPos < poly.terms;bPos++){ // add the remaining terms
             sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp);
         }
 
@@ -106,7 +106,8 @@ public:
 
     Polynomial Mult(Polynomial poly){ // multiply two polynomials
         Polynomial product;
-        for(int i = 0; i < terms; i++){
+        // multiply each term of the first polynomial with each term of the second polynomial
+        for(int i = 0; i < terms; i++){ 
             for(int j = 0; j < poly.terms; j++){
                 float t = termArray[i].coef * poly.termArray[j].coef;
                 int e = termArray[i].exp + poly.termArray[j].exp;
