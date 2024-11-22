@@ -47,9 +47,31 @@ public:
     ~Polynomial(){ // destructor
         delete[] termArray;
     }
-    // default constructor
+    
+    Polynomial(const Polynomial& poly){ // copy constructor
+        capacity = poly.capacity;
+        terms = poly.terms;
+        termArray = new Term[capacity];
+        copy(poly.termArray,poly.termArray+terms,termArray);
+    }
 
-    Polynomial Add(Polynomial poly){
+    // sort and remove the same exponent
+    void sortAndRemove(){
+        sort(termArray,termArray+terms);
+        for(int i = 0; i < terms; i++){
+            for(int j = i+1; j < terms; j++){
+                if(termArray[i].exp == termArray[j].exp){
+                    termArray[i].coef += termArray[j].coef;
+                    for(int k = j; k < terms - 1; k++){
+                        termArray[k] = termArray[k+1];
+                    }
+                    terms--;
+                }
+            }
+        }
+    }
+
+    Polynomial Add(Polynomial poly){ // add two polynomials
 
         Polynomial sum;
         int aPos = 0, bPos = 0;
@@ -76,13 +98,28 @@ public:
             sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp);
         }
 
+        sum.sortAndRemove();
+
         return sum;
 
     }
-    // add two polynomials
 
-    Polynomial Mult();
-    // multiply two polynomials
+    Polynomial Mult(Polynomial poly){ // multiply two polynomials
+        Polynomial product;
+        for(int i = 0; i < terms; i++){
+            for(int j = 0; j < poly.terms; j++){
+                float t = termArray[i].coef * poly.termArray[j].coef;
+                int e = termArray[i].exp + poly.termArray[j].exp;
+                product.NewTerm(t,e);
+            }
+        }
+
+        product.sortAndRemove();
+
+        return product;
+
+    }
+    
 
     float Eval(float x) { // evaluate the polynomial at a given value of x
         float sum = 0;
@@ -91,6 +128,8 @@ public:
         }
         return sum;
     }
+    
+    
     
 
     void NewTerm(float theCoeff,int theExp) { // add a new term to the polynomial
@@ -173,6 +212,9 @@ istream& operator>>(istream& is, Polynomial& poly){ // first version -> read the
     }
 
     // sort the polynomial
+    sort(poly.termArray,poly.termArray+poly.terms);
+    
+    // unneeded
     for(int i = 0; i < poly.terms; i++){
         for(int j = i+1; j < poly.terms; j++){
             if(poly.termArray[i].exp < poly.termArray[j].exp){
@@ -182,7 +224,6 @@ istream& operator>>(istream& is, Polynomial& poly){ // first version -> read the
             }
         }
     }
-
     // remove the same exponent
     for(int i = 0; i < poly.terms; i++){
         for(int j = i+1; j < poly.terms; j++){ // compare the i-th term with the j-th term
@@ -203,7 +244,9 @@ istream& operator>>(istream& is, Polynomial& poly){ // first version -> read the
 
 
 istream& operator>>(istream& is, Polynomial& poly){ // second version -> 以空白分隔 5x+2x^2+3x^3 == 5 1 2 2 3 3
-    
+    /*
+        使用陣列實作，可以先對輸入的項數進行排序，再合併同樣指數的項，最後將合併後的項放入poly，可以減少排序和合併的時間複雜度
+    */
     
     int tSize = 8;
     Term *tArr = new Term[tSize];
@@ -291,6 +334,8 @@ int main()
     //cout<< "val:" << p1.Eval(2) << endl;
     
     cout << p1.Add(p2) << endl;
+
+    cout << p1.Mult(p2) << endl;
 
     return 0;
 }
