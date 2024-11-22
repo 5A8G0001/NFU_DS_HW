@@ -9,7 +9,7 @@ using namespace std;
 class Polynomial; // forward declaration
 
 
-// Term class
+/* Term Class */
 class Term{
 
 friend Polynomial;
@@ -18,10 +18,9 @@ friend istream& operator>>(istream& is, Polynomial& poly);
 friend bool operator<(const Term& t1, const Term& t2);
 
 public:
-    Term(float coef = 0,int exp = 0){
+    Term(float coef = 0,int exp = 0){ // constructor
         this->coef = coef;
         this->exp = exp;
-
     }
 
 private:
@@ -29,11 +28,11 @@ private:
     int exp;
 };
 
-bool operator<(const Term& t1, const Term& t2) {
+bool operator<(const Term& t1, const Term& t2) { // compare the exponents
     return t1.exp < t2.exp;
 }
 
-// Polynomial class
+/* Polynomial Class */
 class Polynomial{
 
 friend ostream& operator<<(ostream& os, const Polynomial& poly);
@@ -50,17 +49,52 @@ public:
     }
     // default constructor
 
-    Polynomial Add();
+    Polynomial Add(Polynomial poly){
+
+        Polynomial sum;
+        int aPos = 0, bPos = 0;
+        while((aPos < terms) && (bPos < poly.terms)){
+            if(termArray[aPos].exp == poly.termArray[bPos].exp){
+                float t = termArray[aPos].coef + poly.termArray[bPos].coef;
+                if(t) sum.NewTerm(t,termArray[aPos].exp);
+                aPos++; bPos++;
+            }
+            else if(termArray[aPos].exp < poly.termArray[bPos].exp){
+                sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp);
+                bPos++;
+            }
+            else{
+                sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp);
+                aPos++;
+            }
+        }
+
+        for(;aPos < terms;aPos++){
+            sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp);
+        }
+        for(;bPos < poly.terms;bPos++){
+            sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp);
+        }
+
+        return sum;
+
+    }
     // add two polynomials
 
     Polynomial Mult();
     // multiply two polynomials
 
-    float Eval(float f) ;
-    // evaluate the polynomial at a given value
+    float Eval(float x) { // evaluate the polynomial at a given value of x
+        float sum = 0;
+        for(int i = 0; i < terms; i++){
+            sum += termArray[i].coef * pow(x,termArray[i].exp);
+        }
+        return sum;
+    }
+    
 
     void NewTerm(float theCoeff,int theExp) { // add a new term to the polynomial
-        if(terms == capacity)
+        if(terms == capacity) // if the array is full
         {
             capacity *= 2;
             Term *temp = new Term[capacity];
@@ -227,7 +261,18 @@ istream& operator>>(istream& is, Polynomial& poly){ // second version -> 以空�
 }
 
 
-
+// operator overloading =
+/*
+Polynomial& operator=(const Polynomial& poly){
+    if(this == &poly) return *this;
+    delete[] termArray;
+    terms = poly.terms;
+    capacity = poly.capacity;
+    termArray = new Term[capacity];
+    copy(poly.termArray,poly.termArray+terms,termArray);
+    return *this;
+}
+*/
 
 
 int main()
@@ -237,8 +282,15 @@ int main()
     //Term  t1(1,0),t2(2,1),t3(3,2);
 
     //p1.NewTerm(1,0);p1.NewTerm(2,1);p1.NewTerm(3,2);
+
+    //cin >> p1 >> p2;
+    //cout << p1 << endl << p2 << endl;
+
     cin >> p1 >> p2;
-    cout << p1 << endl << p2 << endl;
+    //cout << p1 << endl;
+    //cout<< "val:" << p1.Eval(2) << endl;
+    
+    cout << p1.Add(p2) << endl;
 
     return 0;
 }
