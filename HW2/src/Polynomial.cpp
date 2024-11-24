@@ -64,24 +64,34 @@ public:
     // sort and remove the same exponent
     void sortAndRemove(){ // 小到大排序並移除相同指數的項
         sort(termArray,termArray+terms,[](Term t1,Term t2){return t1.exp > t2.exp;}); // sort the terms by the exponent
+        int count = 0;
         for(int i = 0; i < terms; i++){
+            count++;
             for(int j = i+1; j < terms; j++){
+                count++;
                 if(termArray[i].exp == termArray[j].exp){
                     termArray[i].coef += termArray[j].coef;
                     for(int k = j; k < terms - 1; k++){
+                        count++;
                         termArray[k] = termArray[k+1];
                     }
+                    count++;
                     terms--;
                 }
             }
+            count++;
         }
+        count++;
+        cout << "Number of remove comparisons: " << count << endl;
     }
 
     Polynomial Add(Polynomial poly){ // add two polynomials
 
         Polynomial sum;
         int aPos = 0, bPos = 0; // position of the terms in the two polynomials
-        while((aPos < terms) && (bPos < poly.terms)){ 
+        int count = 0;
+        while((aPos < terms) && (bPos < poly.terms)){
+            count++; 
             if(termArray[aPos].exp == poly.termArray[bPos].exp){ // 如果兩個項的指數相同
                 float t = termArray[aPos].coef + poly.termArray[bPos].coef; 
                 if(t) sum.NewTerm(t,termArray[aPos].exp); // 如果t不為0,則加入到sum中
@@ -97,6 +107,7 @@ public:
             }
         }
 
+        cout << "Number of Add comparisons: " << count << endl;
         for(;aPos < terms;aPos++){ // add the remaining terms
             sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp);
         }
@@ -112,15 +123,18 @@ public:
 
     Polynomial Mult(Polynomial poly){ // multiply two polynomials
         Polynomial product;
+        int count = 0;
         // multiply each term of the first polynomial with each term of the second polynomial
         for(int i = 0; i < terms; i++){ 
+            count++;
             for(int j = 0; j < poly.terms; j++){
+                count++;
                 float t = termArray[i].coef * poly.termArray[j].coef;
                 int e = termArray[i].exp + poly.termArray[j].exp;
                 product.NewTerm(t,e);
             }
         }
-
+        cout << "Number of Mult comparisons: " << count << endl;
         product.sortAndRemove();
 
         return product;
@@ -130,11 +144,15 @@ public:
 
     float Eval(float x) { // evaluate the polynomial at a given value of x
         float sum = 0;
+        int count = 0;
         for(int i = 0; i < terms; i++){
+            count++;
             sum += termArray[i].coef * pow(x,termArray[i].exp);
         }
+        cout << "Number of Eval comparisons: " << count << endl;
         return sum;
     }
+    
     
     void NewTerm(float theCoeff,int theExp) { // add a new term to the polynomial
         if(terms == capacity) // if the array is full
@@ -261,25 +279,17 @@ int main()
     Polynomial p1,p2;
 
     cin >> p1 >> p2;
-    
     cout << p1.Add(p2) << endl;
 
     cin >> p1 >> p2;
-
     cout << p1.Mult(p2) << endl;
 
+
     Polynomial p;
-
     cin >> p;
-
     cout << p.Eval(2) << endl;
     
     system("pause");
 
     return 0;
 }
-
-
-/*
-刪除多餘的註解程式碼
-*/

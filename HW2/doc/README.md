@@ -377,6 +377,14 @@ Output:`17`
 
 ## 5. 效能量測 (Measuring)
 
+![count_remove](./countOfRemoveSame.png   "count_remove")
+
+![count_Add](./countOfAdd.png   "count_Add")
+
+![count_Mult](./countOfMult.png   "count_Mult")
+
+![count_Eval](./countOfEval.png   "count_Eval")
+
 ## 6. 心得討論
 
 透過多項式類別的實作，深入理解了動態陣列的使用、運算子重載的實現以及多項式加法與乘法的具體邏輯
