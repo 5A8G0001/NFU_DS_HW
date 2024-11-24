@@ -377,6 +377,8 @@ Output:`17`
 
 ## 5. 效能量測 (Measuring)
 
+左邊有綠色區塊的為量測的程式片段
+
 ![count_remove](./countOfRemoveSame.png   "count_remove")
 
 ![count_Add](./countOfAdd.png   "count_Add")
@@ -384,6 +386,10 @@ Output:`17`
 ![count_Mult](./countOfMult.png   "count_Mult")
 
 ![count_Eval](./countOfEval.png   "count_Eval")
+
+結果
+
+![count_res](./count_result.png   "count_res")
 
 ## 6. 心得討論
 
