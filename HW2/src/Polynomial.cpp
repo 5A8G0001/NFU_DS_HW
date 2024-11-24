@@ -136,9 +136,6 @@ public:
         return sum;
     }
     
-    
-    
-
     void NewTerm(float theCoeff,int theExp) { // add a new term to the polynomial
         if(terms == capacity) // if the array is full
         {
@@ -190,75 +187,6 @@ ostream& operator<<(ostream& os, const Polynomial& poly){
     return os;
 }
 
-/*
-istream& operator>>(istream& is, Polynomial& poly){ // first version -> read the polynomial from the input(字串) 5x+2x^2+3x^3 == 5x1+2x2+3x3 
-    cout << "Enter the number of terms: aix0+aix1-aix2,,3x0+2x3+1x3" << endl;
-    
-    string str;
-    getline(cin,str);
-    //cout << str << endl;
-    int i = 0;
-
-
-    
-    while(i < str.length()){
-        int coef = 0;
-        int exp = 0;
-
-        // check if the first term is negative
-        if(str[i] == '-'){
-            i++;
-            coef = -1;
-        }
-        else if(str[i] == '+'){
-            i++;
-            coef = 1;
-        }
-        else{ // the first term is positive
-            coef = 1;
-        }
-
-        // get the coefficient
-        coef *= str[i] - '0';
-        i++;
-        i++; // skip 'x'
-        // get the exponent
-        exp = str[i] - '0';
-
-        poly.NewTerm(coef,exp);
-        i++;
-    }
-
-    // sort the polynomial
-    // sort(poly.termArray,poly.termArray+poly.terms);
-    
-    // unneeded
-    for(int i = 0; i < poly.terms; i++){
-        for(int j = i+1; j < poly.terms; j++){
-            if(poly.termArray[i].exp < poly.termArray[j].exp){
-                Term temp = poly.termArray[i];
-                poly.termArray[i] = poly.termArray[j];
-                poly.termArray[j] = temp;
-            }
-        }
-    }
-    // remove the same exponent
-    for(int i = 0; i < poly.terms; i++){
-        for(int j = i+1; j < poly.terms; j++){ // compare the i-th term with the j-th term
-            if(poly.termArray[i].exp == poly.termArray[j].exp){ // if the exponents are the same
-                poly.termArray[i].coef += poly.termArray[j].coef;
-                for(int k = j; k < poly.terms - 1; k++){ // remove the j-th term
-                    poly.termArray[k] = poly.termArray[k+1];
-                }
-                poly.terms--;
-            }
-        }
-    }
-
-    return is;
-}*/
-
-
 
 
 istream& operator>>(istream& is, Polynomial& poly){ // second version -> 以空白分隔 5x+2x^2+3x^3 == 5 1 2 2 3 3
@@ -268,7 +196,7 @@ istream& operator>>(istream& is, Polynomial& poly){ // second version -> 以空�
     
     int tSize = 8;
     Term *tArr = new Term[tSize];
-    
+
     float coef;
     int exp;
 
@@ -319,21 +247,6 @@ istream& operator>>(istream& is, Polynomial& poly){ // second version -> 以空�
     return is;
 }
 
-
-// operator overloading =
-/*
-Polynomial& operator=(const Polynomial& poly){
-    if(this == &poly) return *this;
-    delete[] termArray;
-    terms = poly.terms;
-    capacity = poly.capacity;
-    termArray = new Term[capacity];
-    copy(poly.termArray,poly.termArray+terms,termArray);
-    return *this;
-}
-*/
-
-
 int main()
 {
     /*
@@ -368,5 +281,5 @@ int main()
 
 
 /*
-11/24:將乘法與加法的回傳由大到小
+刪除多餘的註解程式碼
 */
