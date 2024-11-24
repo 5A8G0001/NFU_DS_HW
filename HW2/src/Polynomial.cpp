@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <cmath>    // abs()
@@ -16,6 +17,7 @@ friend Polynomial;
 friend ostream& operator<<(ostream& os, const Polynomial& poly);
 friend istream& operator>>(istream& is, Polynomial& poly);
 friend bool operator<(const Term& t1, const Term& t2);
+friend bool operator>(const Term& t1, const Term& t2);
 
 public:
     Term(float coef = 0,int exp = 0){ // constructor
@@ -30,6 +32,10 @@ private:
 
 bool operator<(const Term& t1, const Term& t2) { // compare the exponents
     return t1.exp < t2.exp;
+}
+
+bool operator>(const Term& t1, const Term& t2) { // compare the exponents
+    return t1.exp > t2.exp;
 }
 
 /* Polynomial Class */
@@ -56,8 +62,8 @@ public:
     }
 
     // sort and remove the same exponent
-    void sortAndRemove(){
-        sort(termArray,termArray+terms);
+    void sortAndRemove(){ // 小到大排序並移除相同指數的項
+        sort(termArray,termArray+terms,[](Term t1,Term t2){return t1.exp > t2.exp;}); // sort the terms by the exponent
         for(int i = 0; i < terms; i++){
             for(int j = i+1; j < terms; j++){
                 if(termArray[i].exp == termArray[j].exp){
@@ -154,13 +160,24 @@ private:
 };
 
 ostream& operator<<(ostream& os, const Polynomial& poly){
-    
+    if(poly.terms == 0){
+        os << "0";
+        return os;
+    }
+
     if(poly.termArray[0].coef < 0){
         os << "-"; // if the first term is negative
     }
-
     for(int i = 0; i < poly.terms; i++){
-        os << abs(poly.termArray[i].coef) << "x^" << poly.termArray[i].exp; // abs() to get the absolute value
+        os << abs(poly.termArray[i].coef); // abs() to get the absolute value
+
+        if(poly.termArray[i].exp != 0){
+            os << "x";
+            if(poly.termArray[i].exp != 1){
+                os << "^" << poly.termArray[i].exp;
+            }
+        }
+
         if(i != poly.terms - 1){
             if(poly.termArray[i+1].coef < 0){
                 os << " - ";
@@ -213,7 +230,7 @@ istream& operator>>(istream& is, Polynomial& poly){ // first version -> read the
     }
 
     // sort the polynomial
-    sort(poly.termArray,poly.termArray+poly.terms);
+    // sort(poly.termArray,poly.termArray+poly.terms);
     
     // unneeded
     for(int i = 0; i < poly.terms; i++){
@@ -246,13 +263,11 @@ istream& operator>>(istream& is, Polynomial& poly){ // first version -> read the
 
 istream& operator>>(istream& is, Polynomial& poly){ // second version -> 以空白分隔 5x+2x^2+3x^3 == 5 1 2 2 3 3
     /*
-        使用陣列實作，可以先對輸入的項數進行排序，再合併同樣指數的項，最後將合併後的項放入poly，可以減少排序和合併的時間複雜度
+        使用陣列實作，先對輸入的項數進行排序，再合併同樣指數的項，最後將合併後的項放入poly，可以減少排序和合併的時間複雜度
     */
     
     int tSize = 8;
     Term *tArr = new Term[tSize];
-
-    cout << "Enter the number of terms: ";
     
     float coef;
     int exp;
@@ -279,7 +294,7 @@ istream& operator>>(istream& is, Polynomial& poly){ // second version -> 以空�
         i++;
     }
     // 將指數由小到大排序,coef也要跟著移動
-    sort(tArr, tArr+i);
+    sort(tArr, tArr+i, [](Term t1, Term t2) { return t1 < t2; });
 
     // 合併同樣指數的項
     int j = 0;
@@ -321,22 +336,37 @@ Polynomial& operator=(const Polynomial& poly){
 
 int main()
 {
+    /*
+    // input output test
+    Polynomial p;
+    cin >> p;
+    cout << p << endl;
+    */
+
+    
     // test code
     Polynomial p1,p2;
-    //Term  t1(1,0),t2(2,1),t3(3,2);
-
-    //p1.NewTerm(1,0);p1.NewTerm(2,1);p1.NewTerm(3,2);
-
-    //cin >> p1 >> p2;
-    //cout << p1 << endl << p2 << endl;
 
     cin >> p1 >> p2;
-    //cout << p1 << endl;
-    //cout<< "val:" << p1.Eval(2) << endl;
     
     cout << p1.Add(p2) << endl;
 
+    cin >> p1 >> p2;
+
     cout << p1.Mult(p2) << endl;
+
+    Polynomial p;
+
+    cin >> p;
+
+    cout << p.Eval(2) << endl;
+    
+    system("pause");
 
     return 0;
 }
+
+
+/*
+11/24:將乘法與加法的回傳由大到小
+*/
