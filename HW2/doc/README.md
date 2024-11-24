@@ -10,17 +10,103 @@
 
 多項式相加(`Add`):
 
+```cpp
+Polynomial Add(Polynomial poly){ // add two polynomials
+    Polynomial sum;
+    int aPos = 0, bPos = 0; // position of the terms in the two polynomials
+    int count = 0;
+    while((aPos < terms) && (bPos < poly.terms)){
+        count++; 
+        if(termArray[aPos].exp == poly.termArray[bPos].exp){ // 如果兩個項的指數相同
+            float t = termArray[aPos].coef + poly.termArray[bPos].coef; 
+            if(t) sum.NewTerm(t,termArray[aPos].exp); // 如果t不為0,則加入到sum中
+            aPos++; bPos++;
+        }
+        else if(termArray[aPos].exp < poly.termArray[bPos].exp){ // 如果第一個項的指數小於第二個項的指數
+            sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp); // 將第二個項加入到sum中
+            bPos++;
+        }
+        else{
+            sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp); // 將第一個項加入到sum中
+            aPos++;
+        }
+    }
+
+    cout << "Number of Add comparisons: " << count << endl;
+    for(;aPos < terms;aPos++){ // add the remaining terms
+        sum.NewTerm(termArray[aPos].coef,termArray[aPos].exp);
+    }
+    for(;bPos < poly.terms;bPos++){ // add the remaining terms
+        sum.NewTerm(poly.termArray[bPos].coef,poly.termArray[bPos].exp);
+    }
+
+    sum.sortAndRemove();
+
+    return sum;
+}
+```
+
 多項式相乘(`Mult`):
+
+```cpp
+Polynomial Mult(Polynomial poly){ // multiply two polynomials
+    Polynomial product;
+    int count = 0;
+    // multiply each term of the first polynomial with each term of the second polynomial
+    for(int i = 0; i < terms; i++){ 
+        count++;
+        for(int j = 0; j < poly.terms; j++){
+            count++;
+            float t = termArray[i].coef * poly.termArray[j].coef;
+            int e = termArray[i].exp + poly.termArray[j].exp;
+            product.NewTerm(t,e);
+        }
+    }
+    cout << "Number of Mult comparisons: " << count << endl;
+    product.sortAndRemove();
+
+    return product;
+}
+
+```
 
 計算多項式結果(`Eval`):
 
-新增非0項次(`NewTerm`):
+```cpp
+float Eval(float x) { // evaluate the polynomial at a given value of x
+    float sum = 0;
+    int count = 0;
+    for(int i = 0; i < terms; i++){
+        count++;
+        sum += termArray[i].coef * pow(x,termArray[i].exp);
+    }
+    cout << "Number of Eval comparisons: " << count << endl;
+    return sum;
+}
+```
+
+新增非零項次(`NewTerm`):
+
+```cpp
+void NewTerm(float theCoeff,int theExp) { // add a new term to the polynomial
+    if(terms == capacity) // if the array is full
+    {
+        capacity *= 2;
+        Term *temp = new Term[capacity];
+        copy(termArray,termArray+terms,temp);
+        delete[] termArray;
+        termArray = temp;
+    }
+    termArray[terms].coef = theCoeff;
+    termArray[terms++].exp = theExp;
+}
+```
 
 ### Operator overloading
 
-輸入運算子(`<<`)
+輸入運算子(`<<`):詳見`Polynomial.cpp`
 
-輸出運算子(`>>`)
+輸出運算子(`>>`):詳見`Polynomial.cpp`
 
 對於`Term`類別，為了排序，也對其`>`、`<`實作Operator overloading
 
