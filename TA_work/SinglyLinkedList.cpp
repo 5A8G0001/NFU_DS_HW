@@ -43,6 +43,18 @@ public:
 
     void Delete(int theIndex);
 
+    void Output(ostream &out) const
+    {
+        ChainNode<T> *current = first;
+        while(current != 0)
+        {
+            out << current->data << "->";
+            current = current->link;
+        }
+        out << "NULL" << endl;
+        
+    }
+
     T Index(int theIndex) const;
 
     bool IsEmpty() const
@@ -139,5 +151,8 @@ int main()
     chain.Delete(0);
 
     cout << chain.Index(0) << endl;
+
+    chain.Output(cout);
+
     return 0;
 }
