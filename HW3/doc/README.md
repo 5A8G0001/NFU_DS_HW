@@ -1,4 +1,4 @@
-# HW 2-Polynomial
+# HW 3-Polynomial
 
 ## 1. 解題說明
 
