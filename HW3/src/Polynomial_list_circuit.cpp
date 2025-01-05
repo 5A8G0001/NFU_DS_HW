@@ -147,13 +147,13 @@ public:
         if (head == nullptr && poly.head == nullptr) return sum;
         PolynomialNode* aPos = head;
         PolynomialNode* bPos = poly.head;
-        int count = 0;
+        int count = 0;//
 
         bool aComplete = false;
         bool bComplete = false;
 
         do {
-            count++;
+            count++;//
             if(aComplete || bComplete) {
                 if(aComplete) {
                     sum.InsertNode(sum.head, bPos->coef, bPos->exp);
@@ -187,7 +187,7 @@ public:
             }
         } while (!aComplete || !bComplete);
 
-        cout << "Number of Add comparisons: " << count << endl;
+        cout << "Number of Add comparisons: " << count << endl;//
 
         return sum;
     }
@@ -197,13 +197,13 @@ public:
         if (head == nullptr && poly.head == nullptr) return sum;
         PolynomialNode* aPos = head;
         PolynomialNode* bPos = poly.head;
-        int count = 0;
+        int count = 0;//
 
         bool aComplete = false;
         bool bComplete = false;
 
         do {
-            count++;
+            count++;//
             if(aComplete || bComplete) {
                 if(aComplete) {
                     sum.InsertNode(sum.head, -bPos->coef, bPos->exp);
@@ -237,7 +237,7 @@ public:
             }
         } while (!aComplete || !bComplete);
 
-        cout << "Number of Sub comparisons: " << count << endl;
+        cout << "Number of Sub comparisons: " << count << endl;//
 
         return sum;
     }
@@ -247,13 +247,13 @@ public:
         if (head == nullptr || poly.head == nullptr) return product;
         PolynomialNode* aPos = head;
         
-        int count = 0;
+        int count = 0;// 
 
         do {
             count++;
             PolynomialNode* bPos = poly.head;
             do {
-                count++;
+                count++;//
                 float t = aPos->coef * bPos->coef;
                 int e = aPos->exp + bPos->exp;
                 product.InsertNode(product.head, t, e);
@@ -262,7 +262,7 @@ public:
             aPos = aPos->link;
         } while (aPos != head);
 
-        cout << "Number of Mult comparisons: " << count << endl;
+        cout << "Number of Mult comparisons: " << count << endl;//
 
         return product;
 
@@ -272,6 +272,7 @@ public:
         PolynomialNode* newNode = allocateNode();
         newNode->coef = coef;
         newNode->exp = exp;
+        int count = 1;
 
         if (head == nullptr) { // 如果頭為空
             newNode->link = newNode; // 指向自身形成環
@@ -282,6 +283,7 @@ public:
 
             // 尋找合適的位置插入
             do {
+                count++;
                 if (curr->exp <= exp) break; // 找到插入點
                 prev = curr;
                 curr = curr->link;
@@ -307,6 +309,7 @@ public:
                     // 找到尾節點並更新環
                     PolynomialNode* tail = head;
                     while (tail->link != head) {
+                        count++;
                         tail = tail->link;
                     }
                     tail->link = newNode;
@@ -314,6 +317,7 @@ public:
                 }
             }
         }
+        cout << "Number of Insert comparisons: " << count << endl;
 
         return head;
     }
@@ -343,17 +347,17 @@ public:
 
     float Eval(float x) { // evaluate the polynomial at a given value of x
         float sum = 0;
-        int count = 0;
+        int count = 0;//
         PolynomialNode* Thead = this->head;
         if(Thead == nullptr) return 0;
         do
         {
-            count++;
+            count++;//
             sum += Thead->coef * pow(x, Thead->exp);
             Thead = Thead->link;
         } while (Thead != this->head);
 
-        cout << "Number of Eval comparisons: " << count << endl;
+        cout << "Number of Eval comparisons: " << count << endl;//
         return sum;
     }
 

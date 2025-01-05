@@ -878,15 +878,19 @@ Output:`Evaluation of p1 at x=2: 2992`
 
 ## 5. 效能量測 (Measuring)
 
-左邊有綠色區塊的為量測的程式片段
+左邊有綠色/藍色區塊的為量測的程式片段
 
-![count_remove](./countOfRemoveSame.png   "count_remove")
+![InsertNode](./countOfInsert.png   "InsertNode")
 
 ![count_Add](./countOfAdd.png   "count_Add")
+
+![count_Sub](./countOfSub.png   "count_Sub")
 
 ![count_Mult](./countOfMult.png   "count_Mult")
 
 ![count_Eval](./countOfEval.png   "count_Eval")
+
+
 
 結果
 
